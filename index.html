@@ -16,39 +16,58 @@
   <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 
   <script>
-    // Your D3 code and narrative visualization logic will go here
-    // Remember to use D3, d3-annotation, and topoJSON Client as allowed in the assignment
-
-    // Example D3 code to create a simple scatter plot
+    // Sample dataset (you can replace this with the actual dataset)
     const dataset = [
-      { x: 10, y: 20, label: 'Data Point 1' },
-      { x: 50, y: 70, label: 'Data Point 2' },
-      { x: 30, y: 50, label: 'Data Point 3' },
+      { Make: "Acura", Fuel: "Gasoline", EngineCylinders: 4, AverageHighwayMPG: 35, AverageCityMPG: 25 },
+      { Make: "Acura", Fuel: "Gasoline", EngineCylinders: 6, AverageHighwayMPG: 28, AverageCityMPG: 21 },
       // Add more data points here
     ];
 
+    // Set up the dimensions and margins for the scatter plot
+    const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+    const width = 800 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+
+    // Create the SVG container for the scatter plot
     const svg = d3.select('.container')
       .append('svg')
-      .attr('width', 800)
-      .attr('height', 400);
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    // Define the scales for the x and y axes
+    const xScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset, d => d.AverageHighwayMPG)])
+      .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(dataset, d => d.AverageCityMPG)])
+      .range([height, 0]);
+
+    // Create the scatter plot circles
     const circles = svg.selectAll('circle')
       .data(dataset)
       .enter()
       .append('circle')
-      .attr('cx', d => d.x)
-      .attr('cy', d => d.y)
+      .attr('cx', d => xScale(d.AverageHighwayMPG))
+      .attr('cy', d => yScale(d.AverageCityMPG))
       .attr('r', 5)
       .style('fill', 'blue');
 
-    const labels = svg.selectAll('text')
-      .data(dataset)
-      .enter()
-      .append('text')
-      .attr('x', d => d.x + 10)
-      .attr('y', d => d.y + 5)
-      .text(d => d.label)
-      .style('font-size', '10px');
+    // Create annotations for data points
+    const annotations = d3.annotation()
+      .type(d3.annotationCalloutCircle)
+      .annotations(dataset.map((d, i) => ({
+        note: { title: d.Make, label: `City MPG: ${d.AverageCityMPG}, Highway MPG: ${d.AverageHighwayMPG}` },
+        x: xScale(d.AverageHighwayMPG),
+        y: yScale(d.AverageCityMPG),
+        dx: -30,
+        dy: 30
+      })));
+
+    svg.append('g')
+      .call(annotations);
 
   </script>
 </body>
