@@ -18,57 +18,6 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Car MPG Analysis</h1>
-
-    <!-- Scene 1: Introduction -->
-    <h2>Scene 1: Introduction</h2>
-    <p>
-      The opening scene introduces the car enthusiast and sets the context for the exploration of engine cylinders and MPG.
-      A brief explanation of the dataset and its variables (Make, Fuel, Engine Cylinders, Average Highway MPG, and Average City MPG) is provided.
-    </p>
-
-    <!-- Scene 2: Engine Cylinders vs. MPG Scatter Plot -->
-    <h2>Scene 2: Engine Cylinders vs. MPG</h2>
-    <div id="chart-container-2">
-      <!-- Engine Cylinders vs. MPG chart will be appended here -->
-    </div>
-
-    <!-- Scene 3: City MPG Analysis -->
-    <h2>Scene 3: City MPG Analysis</h2>
-    <div id="chart-container-3">
-      <!-- City MPG chart will be appended here -->
-    </div>
-
-    <!-- Scene 4: Conclusion and Takeaways -->
-    <h2>Scene 4: Conclusion and Takeaways</h2>
-    <div>
-      <p>
-        After exploring the data, we can draw the following conclusions and takeaways:
-      </p>
-      <ul>
-        <li>Gasoline-powered cars generally have a wide range of MPG values based on engine cylinders.</li>
-        <li>Diesel-powered cars tend to have higher MPG values for both city and highway driving.</li>
-        <li>Electric cars stand out for their high MPG in the city, making them efficient in urban environments.</li>
-        <li>Smaller engine cylinders often lead to better city MPG, while larger cylinders can provide higher highway MPG.</li>
-      </ul>
-    </div>
-
-    <!-- Scene 5: Fuel Type Comparison -->
-    <h2>Scene 5: Fuel Type Comparison</h2>
-    <div>
-      <label for="fuel-type">Select Fuel Type:</label>
-      <select id="fuel-type">
-        <option value="Gasoline">Gasoline</option>
-        <option value="Diesel">Diesel</option>
-        <option value="Electricity">Electricity</option>
-      </select>
-    </div>
-    <div id="chart-container-5">
-      <!-- Fuel Type Comparison chart will be appended here -->
-    </div>
-  </div>
-
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="https://unpkg.com/d3-annotation@2.3.0/dist/d3-annotation.min.js"></script>
   <script>
@@ -91,12 +40,31 @@
 
       // Scene 2: Engine Cylinders vs. MPG Scatter Plot
       // ... Your D3 code for Scene 2 ...
-      <!-- Scene 2: Engine Cylinders vs. MPG Scatter Plot -->
-<h2>Scene 2: Engine Cylinders vs. MPG</h2>
-<div id="chart-container-2">
-  <!-- Engine Cylinders vs. MPG chart will be appended here -->
-</div>
 
+
+
+      // Scene 3: City MPG Analysis
+      // ... Your D3 code for Scene 3 ...
+
+      // Scene 5: Fuel Type Comparison
+      // ... Your D3 code for Scene 5 ...
+    });
+  </script>
+  <div class="container">
+    <h1>Car MPG Analysis</h1>
+
+    <!-- Scene 1: Introduction -->
+    <h2>Scene 1: Introduction</h2>
+    <p>
+      The opening scene introduces the car enthusiast and sets the context for the exploration of engine cylinders and MPG.
+      A brief explanation of the dataset and its variables (Make, Fuel, Engine Cylinders, Average Highway MPG, and Average City MPG) is provided.
+    </p>
+
+    <!-- Scene 2: Engine Cylinders vs. MPG Scatter Plot -->
+    <h2>Scene 2: Engine Cylinders vs. MPG</h2>
+    <div id="chart-container-2">
+      <!-- Engine Cylinders vs. MPG chart will be appended here -->
+    </div>
 <script>
   // Create the Engine Cylinders vs. MPG chart
   const svgEngineCylinders = d3.select('#chart-container-2')
@@ -149,16 +117,45 @@
       .attr('x', -150)
       .style('text-anchor', 'middle')
       .text('MPG');
-  };
+  });
 </script>
 
-      // Scene 3: City MPG Analysis
-      // ... Your D3 code for Scene 3 ...
+    <!-- Scene 3: City MPG Analysis -->
+    <h2>Scene 3: City MPG Analysis</h2>
+    <div id="chart-container-3">
+      <!-- City MPG chart will be appended here -->
+    </div>
 
-      // Scene 5: Fuel Type Comparison
-      // ... Your D3 code for Scene 5 ...
-    });
-  </script>
+    <!-- Scene 4: Conclusion and Takeaways -->
+    <h2>Scene 4: Conclusion and Takeaways</h2>
+    <div>
+      <p>
+        After exploring the data, we can draw the following conclusions and takeaways:
+      </p>
+      <ul>
+        <li>Gasoline-powered cars generally have a wide range of MPG values based on engine cylinders.</li>
+        <li>Diesel-powered cars tend to have higher MPG values for both city and highway driving.</li>
+        <li>Electric cars stand out for their high MPG in the city, making them efficient in urban environments.</li>
+        <li>Smaller engine cylinders often lead to better city MPG, while larger cylinders can provide higher highway MPG.</li>
+      </ul>
+    </div>
+
+    <!-- Scene 5: Fuel Type Comparison -->
+    <h2>Scene 5: Fuel Type Comparison</h2>
+    <div>
+      <label for="fuel-type">Select Fuel Type:</label>
+      <select id="fuel-type">
+        <option value="Gasoline">Gasoline</option>
+        <option value="Diesel">Diesel</option>
+        <option value="Electricity">Electricity</option>
+      </select>
+    </div>
+    <div id="chart-container-5">
+      <!-- Fuel Type Comparison chart will be appended here -->
+    </div>
+  </div>
+
+
 </body>
 </html>
 
