@@ -20,6 +20,7 @@
 <body>
   <div class="container">
     <h1>Car MPG Analysis</h1>
+
     <!-- Scene 1: Introduction -->
     <h2>Scene 1: Introduction</h2>
     <p>
@@ -63,26 +64,34 @@
         <option value="Electricity">Electricity</option>
       </select>
     </div>
-    <div id="chart-container-2">
-      <!-- Secondary visualization will be appended here -->
+    <div id="chart-container-5">
+      <!-- Fuel Type Comparison chart will be appended here -->
     </div>
   </div>
 
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="https://unpkg.com/d3-annotation@2.3.0/dist/d3-annotation.min.js"></script>
   <script>
-    // The complete dataset (replace this with your actual dataset)
-    async function init() {
-    
-    const dataset = await d3.csv(
-'https://github.com/shiz4-illinois/shiz4-illinois.github.io/blob/main/cars2017.csv')};
+    // Load the CSV data from your GitHub repository using d3.csv and await
+    async function loadData() {
+      try {
+        const response = await d3.csv('https://github.com/shiz4-illinois/shiz4-illinois.github.io/blob/main/cars2017.csv');
+        return response;
+      } catch (error) {
+        console.error('Error loading CSV:', error);
+      }
+    }
 
-    // Set up the dimensions and margins for the scatter plots
-    const margin = { top: 50, right: 30, bottom: 50, left: 60 };
-    const width = 800 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
-    // Add the rest of your D3 code for each scene here...
-<!-- Scene 2: Engine Cylinders vs. MPG Scatter Plot -->
+    // Call the loadData function and handle the dataset
+    loadData().then(dataset => {
+      // Your D3 code here...
+      console.log(dataset); // Check if the dataset is loaded successfully
+
+      // Rest of your D3 code for building the narrative visualization with the dataset...
+
+      // Scene 2: Engine Cylinders vs. MPG Scatter Plot
+      // ... Your D3 code for Scene 2 ...
+      <!-- Scene 2: Engine Cylinders vs. MPG Scatter Plot -->
 <h2>Scene 2: Engine Cylinders vs. MPG</h2>
 <div id="chart-container-2">
   <!-- Engine Cylinders vs. MPG chart will be appended here -->
@@ -92,71 +101,63 @@
   // Create the Engine Cylinders vs. MPG chart
   const svgEngineCylinders = d3.select('#chart-container-2')
     .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+    .attr('width', 800)
+    .attr('height', 400)
     .append('g')
-    .attr('transform', `translate(${margin.left},${margin.top})`);
+    .attr('transform', 'translate(50, 50)');
 
-  // Define the scales for the x and y axes for Engine Cylinders vs. MPG chart
-  const xScaleEngineCylinders = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.EngineCylinders)])
-    .range([0, width]);
+  // Access the loaded dataset
+  loadData().then(dataset => {
+    // Define the scales for the x and y axes for Engine Cylinders vs. MPG chart
+    const xScaleEngineCylinders = d3.scaleLinear()
+      .domain([0, d3.max(dataset, d => d.EngineCylinders)])
+      .range([0, 700]);
 
-  const yScaleHighwayMPG = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.AverageHighwayMPG)])
-    .range([height, 0]);
+    const yScaleMPG = d3.scaleLinear()
+      .domain([0, d3.max(dataset, d => Math.max(d.AverageHighwayMPG, d.AverageCityMPG))])
+      .range([300, 0]);
 
-  const yScaleCityMPG = d3.scaleLinear()
-    .domain([0, d3.max(dataset, d => d.AverageCityMPG)])
-    .range([height, 0]);
+    // Create circles for each data point
+    const circles = svgEngineCylinders.selectAll('circle')
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', d => xScaleEngineCylinders(d.EngineCylinders))
+      .attr('cy', d => yScaleMPG(d.AverageHighwayMPG)) // You can use AverageCityMPG here too
+      .attr('r', 5)
+      .style('fill', 'blue');
 
-  // Create the scatter plot circles for Engine Cylinders vs. Highway MPG
-  const circlesHighwayMPG = svgEngineCylinders.selectAll('.circle-highway')
-    .data(dataset)
-    .enter()
-    .append('circle')
-    .attr('class', 'circle-highway')
-    .attr('cx', d => xScaleEngineCylinders(d.EngineCylinders))
-    .attr('cy', d => yScaleHighwayMPG(d.AverageHighwayMPG))
-    .attr('r', 5)
-    .style('fill', 'blue');
+    // Add labels for car makes
+    const labels = svgEngineCylinders.selectAll('text')
+      .data(dataset)
+      .enter()
+      .append('text')
+      .attr('x', d => xScaleEngineCylinders(d.EngineCylinders) + 10)
+      .attr('y', d => yScaleMPG(d.AverageHighwayMPG) + 5) // You can use AverageCityMPG here too
+      .text(d => d.Make)
+      .style('font-size', '10px');
 
-  // Create the scatter plot circles for Engine Cylinders vs. City MPG
-  const circlesCityMPG = svgEngineCylinders.selectAll('.circle-city')
-    .data(dataset)
-    .enter()
-    .append('circle')
-    .attr('class', 'circle-city')
-    .attr('cx', d => xScaleEngineCylinders(d.EngineCylinders))
-    .attr('cy', d => yScaleCityMPG(d.AverageCityMPG))
-    .attr('r', 5)
-    .style('fill', 'green');
+    // Add axis labels
+    svgEngineCylinders.append('text')
+      .attr('transform', 'translate(350, 350)')
+      .style('text-anchor', 'middle')
+      .text('Engine Cylinders');
 
-  // Add labels for Engine Cylinders vs. MPG chart
-  const labels = svgEngineCylinders.selectAll('text')
-    .data(dataset)
-    .enter()
-    .append('text')
-    .attr('x', d => xScaleEngineCylinders(d.EngineCylinders) + 10)
-    .attr('y', d => yScaleHighwayMPG(d.AverageHighwayMPG) + 5)
-    .text(d => d.Make)
-    .style('font-size', '10px');
-
-  // Add axis labels
-  svgEngineCylinders.append('text')
-    .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 5})`)
-    .style('text-anchor', 'middle')
-    .text('Engine Cylinders');
-
-  svgEngineCylinders.append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('y', 0 - margin.left)
-    .attr('x', 0 - (height / 2))
-    .attr('dy', '1em')
-    .style('text-anchor', 'middle')
-    .text('MPG');
+    svgEngineCylinders.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', -30)
+      .attr('x', -150)
+      .style('text-anchor', 'middle')
+      .text('MPG');
+  });
 </script>
 
+      // Scene 3: City MPG Analysis
+      // ... Your D3 code for Scene 3 ...
+
+      // Scene 5: Fuel Type Comparison
+      // ... Your D3 code for Scene 5 ...
+    });
   </script>
 </body>
 </html>
