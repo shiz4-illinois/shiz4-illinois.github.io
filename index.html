@@ -1,7 +1,56 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Narrative Visualization with D3</title>
+  <style>
+    /* Add your CSS styling here */
+  </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+  <div class="container">
+    <!-- Your visualization will be appended here -->
+  </div>
+
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://unpkg.com/d3-annotation@2.3.0/dist/d3-annotation.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+
+  <script>
+    // Your D3 code and narrative visualization logic will go here
+    // Remember to use D3, d3-annotation, and topoJSON Client as allowed in the assignment
+
+    // Example D3 code to create a simple scatter plot
+    const dataset = [
+      { x: 10, y: 20, label: 'Data Point 1' },
+      { x: 50, y: 70, label: 'Data Point 2' },
+      { x: 30, y: 50, label: 'Data Point 3' },
+      // Add more data points here
+    ];
+
+    const svg = d3.select('.container')
+      .append('svg')
+      .attr('width', 800)
+      .attr('height', 400);
+
+    const circles = svg.selectAll('circle')
+      .data(dataset)
+      .enter()
+      .append('circle')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', 5)
+      .style('fill', 'blue');
+
+    const labels = svg.selectAll('text')
+      .data(dataset)
+      .enter()
+      .append('text')
+      .attr('x', d => d.x + 10)
+      .attr('y', d => d.y + 5)
+      .text(d => d.label)
+      .style('font-size', '10px');
+
+  </script>
 </body>
 </html>
+
