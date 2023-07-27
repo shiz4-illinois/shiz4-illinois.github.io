@@ -1,161 +1,411 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Car MPG Analysis - Narrative Visualization</title>
-  <style>
-    /* Add your CSS styling here */
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    svg {
-      border: 1px solid #ccc;
-    }
-    .annotation {
-      font-size: 12px;
-      text-anchor: middle;
-    }
-  </style>
+
 </head>
 <body>
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <script src="https://unpkg.com/d3-annotation@2.3.0/dist/d3-annotation.min.js"></script>
-  <script>
-    // Load the CSV data from your GitHub repository using d3.csv and await
-    async function loadData() {
-      try {
-        const response = await d3.csv('https://github.com/shiz4-illinois/shiz4-illinois.github.io/blob/main/cars2017.csv');
-        return response;
-      } catch (error) {
-        console.error('Error loading CSV:', error);
-      }
-    }
-
-    // Call the loadData function and handle the dataset
-    loadData().then(dataset => {
-      // Your D3 code here...
-      console.log(dataset); // Check if the dataset is loaded successfully
-
-      // Rest of your D3 code for building the narrative visualization with the dataset...
-
-      // Scene 2: Engine Cylinders vs. MPG Scatter Plot
-      // ... Your D3 code for Scene 2 ...
-
-
-
-      // Scene 3: City MPG Analysis
-      // ... Your D3 code for Scene 3 ...
-
-      // Scene 5: Fuel Type Comparison
-      // ... Your D3 code for Scene 5 ...
-    });
-  </script>
-  <div class="container">
-    <h1>Car MPG Analysis</h1>
-
-    <!-- Scene 1: Introduction -->
-    <h2>Scene 1: Introduction</h2>
-    <p>
-      The opening scene introduces the car enthusiast and sets the context for the exploration of engine cylinders and MPG.
-      A brief explanation of the dataset and its variables (Make, Fuel, Engine Cylinders, Average Highway MPG, and Average City MPG) is provided.
-    </p>
-
-    <!-- Scene 2: Engine Cylinders vs. MPG Scatter Plot -->
-    <h2>Scene 2: Engine Cylinders vs. MPG</h2>
-    <div id="chart-container-2">
-      <!-- Engine Cylinders vs. MPG chart will be appended here -->
-    </div>
-<script>
-  // Create the Engine Cylinders vs. MPG chart
-  const svgEngineCylinders = d3.select('#chart-container-2')
-    .append('svg')
-    .attr('width', 800)
-    .attr('height', 400)
-    .append('g')
-    .attr('transform', 'translate(50, 50)');
-
-  // Access the loaded dataset
-  loadData().then(dataset => {
-    // Define the scales for the x and y axes for Engine Cylinders vs. MPG chart
-    const xScaleEngineCylinders = d3.scaleLinear()
-      .domain([0, d3.max(dataset, d => d.EngineCylinders)])
-      .range([0, 700]);
-
-    const yScaleMPG = d3.scaleLinear()
-      .domain([0, d3.max(dataset, d => Math.max(d.AverageHighwayMPG, d.AverageCityMPG))])
-      .range([300, 0]);
-
-    // Create circles for each data point
-    const circles = svgEngineCylinders.selectAll('circle')
-      .data(dataset)
-      .enter()
-      .append('circle')
-      .attr('cx', d => xScaleEngineCylinders(d.EngineCylinders))
-      .attr('cy', d => yScaleMPG(d.AverageHighwayMPG)) // You can use AverageCityMPG here too
-      .attr('r', 5)
-      .style('fill', 'blue');
-
-    // Add labels for car makes
-    const labels = svgEngineCylinders.selectAll('text')
-      .data(dataset)
-      .enter()
-      .append('text')
-      .attr('x', d => xScaleEngineCylinders(d.EngineCylinders) + 10)
-      .attr('y', d => yScaleMPG(d.AverageHighwayMPG) + 5) // You can use AverageCityMPG here too
-      .text(d => d.Make)
-      .style('font-size', '10px');
-
-    // Add axis labels
-    svgEngineCylinders.append('text')
-      .attr('transform', 'translate(350, 350)')
-      .style('text-anchor', 'middle')
-      .text('Engine Cylinders');
-
-    svgEngineCylinders.append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', -30)
-      .attr('x', -150)
-      .style('text-anchor', 'middle')
-      .text('MPG');
-  });
-</script>
-
-    <!-- Scene 3: City MPG Analysis -->
-    <h2>Scene 3: City MPG Analysis</h2>
-    <div id="chart-container-3">
-      <!-- City MPG chart will be appended here -->
-    </div>
-
-    <!-- Scene 4: Conclusion and Takeaways -->
-    <h2>Scene 4: Conclusion and Takeaways</h2>
-    <div>
-      <p>
-        After exploring the data, we can draw the following conclusions and takeaways:
-      </p>
-      <ul>
-        <li>Gasoline-powered cars generally have a wide range of MPG values based on engine cylinders.</li>
-        <li>Diesel-powered cars tend to have higher MPG values for both city and highway driving.</li>
-        <li>Electric cars stand out for their high MPG in the city, making them efficient in urban environments.</li>
-        <li>Smaller engine cylinders often lead to better city MPG, while larger cylinders can provide higher highway MPG.</li>
-      </ul>
-    </div>
-
-    <!-- Scene 5: Fuel Type Comparison -->
-    <h2>Scene 5: Fuel Type Comparison</h2>
-    <div>
-      <label for="fuel-type">Select Fuel Type:</label>
-      <select id="fuel-type">
-        <option value="Gasoline">Gasoline</option>
-        <option value="Diesel">Diesel</option>
-        <option value="Electricity">Electricity</option>
-      </select>
-    </div>
-    <div id="chart-container-5">
-      <!-- Fuel Type Comparison chart will be appended here -->
-    </div>
+  <h1>Automobile Fuel and MPG Analysis</h1>
+  
+  <!-- Container for the visualization -->
+  <div id="visualization-container">
+    <!-- The bar chart will be rendered here -->
   </div>
 
+  <!-- Load D3 library -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  
+  <!-- Load d3-annotation library -->
+  <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+  <!-- Load topoJSON Client library -->
+  <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+    
+	<!-- Buttons to switch between scenes -->
+  <button id="scene1Btn">Which Fuel is Efficient?</button>
+  <button id="scene2Btn">Which Car Make Should I go?</button>
+  <button id="scene3Btn">How Many Cylinders do I Need?</button>
+  <script type="text/javascript">
+
+    
+    // Parse the data
+    d3.csv("https://shiz4-illinois.github.io/cars2017.csv").then(function(data) {
+
+	// Scene 1 function
+ 	function renderScene1() {
+
+
+      data.forEach(function(d) {
+        d.AvgMPG = +d.AvgMPG;
+      });
+
+      // Group the data by Fuel type
+      var fuelMaxAvgMPG = d3.nest()
+                           .key(function(d) { return d.Fuel; })
+                           .rollup(function(v) { return d3.max(v, function(d) { return d.AvgMPG; }); })
+                           .entries(data);
+
+      //get the min AvgMPG for each group
+      var fuelMinAvgMPG = d3.nest()
+                           .key(function(d) { return d.Fuel; })
+                           .rollup(function(v) { return d3.min(v, function(d) { return d.AvgMPG; }); })
+                           .entries(data);
+
+      // Scene 1:
+      var svg = d3.select("#visualization-container")
+                  .append("svg")
+                  .attr("width", 800)
+                  .attr("height", 800);
+
+      // scale for the x-axis
+      var xScale = d3.scaleBand()
+                     .domain(fuelMaxAvgMPG.map(function(d) { return d.key; }))
+                     .range([50, 700])
+                     .padding(0.1);
+
+      // scale for the y-axis
+      var yScale = d3.scaleLinear()
+                     .domain([0, d3.max(fuelMaxAvgMPG, function(d) { return d.value; })])
+                     .range([500, 50]);
+
+      // Create the x-axis
+      var xAxis = d3.axisBottom(xScale);
+      svg.append("g")
+         .attr("class", "x-axis")
+         .attr("transform", "translate(0, 500)")
+         .call(xAxis)
+         .selectAll("text")
+         .style("text-anchor", "middle")
+	 .style("font-size","25px")
+
+
+
+      // Create the y-axis
+      var yAxis = d3.axisLeft(yScale);
+      svg.append("g")
+         .attr("class", "y-axis")
+         .attr("transform", "translate(50, 0)")
+         .call(yAxis);
+
+      // Create the bars for the bar chart
+      var bars = svg.selectAll(".bar")
+                    .data(fuelMaxAvgMPG)
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function(d) { return xScale(d.key); })
+                    .attr("y", function(d) { return yScale(d.value); })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d) { return 500 - yScale(d.value); })
+                    .attr("fill", "steelblue")
+                    .on("mouseover", function(d) {
+                      // Show tooltip with Min AvgMPG on mouseover
+                      var tooltip = d3.select("body")
+                                      .append("div")
+                                      .attr("class", "tooltip")
+                                      .style("position", "absolute")
+                                      .style("background-color", "white")
+                                      .style("padding", "5px")
+                                      .style("border", "1px solid #ccc")
+                                      .style("border-radius", "5px")
+                                      .style("pointer-events", "none")
+                                      .style("opacity", 0);
+
+                      var minAvgMPG = fuelMinAvgMPG.find(function(e) { return e.key === d.key; }).value;
+
+                      tooltip.html("Fuel Type: " + d.key + "<br>Max AvgMPG: " + d.value.toFixed(1) + "<br>Min AvgMPG: " + minAvgMPG.toFixed(1))
+                             .style("left", d3.event.pageX + "px")
+                             .style("top", d3.event.pageY + "px")
+                             .style("opacity", 0.9);
+                    })
+                    .on("mouseout", function() {
+                      // Remove tooltip on mouseout
+                      d3.select(".tooltip").remove();
+                    });
+
+      //text on top of each bar
+      svg.selectAll(".label")
+         .data(fuelMaxAvgMPG)
+         .enter()
+         .append("text")
+         .attr("class", "label")
+         .attr("x", function(d) { return xScale(d.key) + xScale.bandwidth() / 2; })
+         .attr("y", function(d) { return yScale(d.value) - 10; })
+         .text(function(d) { return d.value.toFixed(1); })
+         .attr("text-anchor", "middle")
+         .attr("fill", "black");
+
+
+      // Add title and explanation
+      svg.append("text")
+         .attr("x", 400)
+         .attr("y", 25)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "20px")
+         .text("Fuel Types and Max AvgMPG");
+
+      svg.append("text")
+         .attr("x", 400)
+         .attr("y", 600)
+         .attr("text-anchor", "middle")
+	 .attr("font-size", "20px")
+         .text("When you point on each bar, you will get both the maximum and minimum average MPG.");
+
+      svg.append("text")
+         .attr("x", 400)
+         .attr("y", 650)
+         .attr("text-anchor", "middle")
+	 .attr("font-size", "20px")
+         .text("The best efficiency of gas and diesel are similar, but way lower than EVs.");
+
+
+      }
+
+	// Scene 2 function
+ 	function renderScene2() {
+
+        // Group the data by Fuel type and Car make to get the counts for each group
+        var fuelMakeCounts = d3.nest()
+                               .key(function(d) { return d.Fuel; })
+                               .key(function(d) { return d.Make; })
+                               .rollup(function(v) { return v.length; })
+                               .entries(data);
+
+        // array of car makes
+        var carMakes = d3.map(data, function(d) { return d.Make; }).keys();
+
+
+
+        // scale for the x-axis
+        var xScale = d3.scaleBand()
+                       .domain(carMakes)
+                       .range([50, 700])
+                       .padding(0.1);
+
+        //scale for the y-axis
+        var yScale = d3.scaleLinear()
+                       .domain([0, d3.max(fuelMakeCounts, function(d) { return d3.max(d.values, function(v) { return v.value; }); })]) 
+                       .range([500, 50]);
+
+       
+        var svg = d3.select("#visualization-container svg");
+        if (svg.empty()) {
+          svg = d3.select("#visualization-container")
+                  .append("svg")
+                  .attr("width", 800)
+                  .attr("height", 800);
+        }
+
+
+        var bars = svg.selectAll(".bar")
+                      .data(fuelMakeCounts)
+                      .enter()
+                      .append("g")
+                      .attr("class", "bar")
+                      .attr("transform", function(d) { return "translate(" + xScale(d.key) + ",0)"; })
+                      .selectAll("rect")
+                      .data(function(d) { return d.values; })
+                      .enter()
+                      .append("rect")
+                      .attr("x", function(d) { return xScale(d.key); })
+                      .attr("y", function(d) { return yScale(d.value); })
+                      .attr("width", xScale.bandwidth())
+                      .attr("height", function(d) { return 500 - yScale(d.value); })
+                      .on("mouseover", function(d) {
+                        // Show tooltip with car make count on mouseover
+                        var tooltip = d3.select("body")
+                                        .append("div")
+                                        .attr("class", "tooltip")
+                                        .style("position", "absolute")
+                                        .style("background-color", "white")
+                                        .style("padding", "5px")
+                                        .style("border", "1px solid #ccc")
+                                        .style("border-radius", "5px")
+                                        .style("pointer-events", "none")
+                                        .style("opacity", 0);
+
+                        tooltip.html("Car Make: " + d.key + "<br>Count: " + d.value)
+                               .style("left", d3.event.pageX + "px")
+                               .style("top", d3.event.pageY + "px")
+                               .style("opacity", 0.9);
+                      })
+                      .on("mouseout", function() {
+                         d3.select(".tooltip").remove();
+                      })
+
+          svg.selectAll(".bar")
+	     .data(data)
+             .attr("fill", function(d) { return getFuelTypeColor(d.Fuel); });
+
+        // Add Y-axis
+        var yAxis = d3.axisLeft(yScale);
+        svg.append("g")
+           .attr("class", "y-axis")
+           .attr("transform", "translate(50, 0)")
+           .call(yAxis);
+
+        // Add x-axis labels
+        svg.append("g")
+           .attr("transform", "translate(0, 500)")
+           .call(d3.axisBottom(xScale))
+           .selectAll("text")
+           .style("text-anchor", "end")
+           .attr("dx", "-.8em")
+           .attr("dy", ".15em")
+           .attr("transform", "rotate(-45)");
+
+        // Add title and explanation
+        svg.append("text")
+           .attr("x", 400)
+           .attr("y", 25)
+           .attr("text-anchor", "middle")
+           .attr("font-size", "20px")
+           .text("Car Makes Distribution for each Fuel Type");
+
+        svg.append("text")
+         .attr("x", 400)
+         .attr("y", 600)
+         .attr("text-anchor", "middle")
+	 .attr("font-size", "20px")
+         .text("Each bar shows the availability of various fuel types one car make provides.");
+
+        svg.append("text")
+         .attr("x", 400)
+         .attr("y", 650)
+         .attr("text-anchor", "middle")
+	 .attr("font-size", "20px")
+         .text("Customers can choose their preferred car type from the make with the most categories.");
+
+      }
+
+      // Function to get a color for each fuel type
+      function getFuelTypeColor(fuelType) {
+        var colorMap = {
+          "Electricity": "steelblue",
+          "Gasoline": "brown",
+          "Diesel": "black"
+        };
+
+        return colorMap[fuelType];
+      };
+
+
+
+	    //Scene 3
+    function renderScene3() {
+      
+      var carMakes = d3.map(data, function(d) { return d.Make; }).keys();
+
+     
+      var xScale = d3.scaleBand()
+                     .domain(carMakes)
+                     .range([50, 700])
+                     .padding(0.1);
+
+      
+      var yScale = d3.scaleLinear()
+                     .domain([0, 14]) // Y-axis range from 2 to 14
+                     .range([500, 50]);
+
+      
+      var svg = d3.select("#visualization-container svg");
+      if (svg.empty()) {
+        svg = d3.select("#visualization-container")
+                .append("svg")
+                .attr("width", 800)
+                .attr("height", 800);
+      }
+
+      // Create the scatter plot
+      var circles = svg.selectAll("circle")
+                      .data(data)
+                      .enter()
+                      .append("circle")
+                      .attr("cx", function(d) { return xScale(d.Make) + xScale.bandwidth() / 2; })
+                      .attr("cy", function(d) { return yScale(d.EngineCylinders); })
+                      .attr("r", 5)
+                      .attr("fill", function(d) { return getFuelTypeColor(d.Fuel); })
+                      .on("mouseover", function(d) {
+                        // Show tooltip with Engine Cylinders and Average MPG on mouseover
+                        var tooltip = d3.select("body")
+                                        .append("div")
+                                        .attr("class", "tooltip")
+                                        .style("position", "absolute")
+                                        .style("background-color", "white")
+                                        .style("padding", "5px")
+                                        .style("border", "1px solid #ccc")
+                                        .style("border-radius", "5px")
+                                        .style("pointer-events", "none")
+                                        .style("opacity", 0);
+
+                        tooltip.html("Engine Cylinders: " + d.EngineCylinders + "<br>AvgMPG: " + d.AvgMPG)
+                               .style("left", d3.event.pageX + "px")
+                               .style("top", d3.event.pageY + "px")
+                               .style("opacity", 0.9);
+                      })
+                      .on("mouseout", function() {
+                        // Remove tooltip on mouseout
+                        d3.select(".tooltip").remove();
+                      });
+
+      // Add Y-axis
+      var yAxis = d3.axisLeft(yScale);
+      svg.append("g")
+         .attr("class", "y-axis")
+         .attr("transform", "translate(50, 0)")
+         .call(yAxis);
+
+      // Add x-axis
+      svg.append("g")
+         .attr("transform", "translate(0, 500)")
+         .call(d3.axisBottom(xScale))
+         .selectAll("text")
+         .style("text-anchor", "end")
+         .attr("dx", "-.8em")
+         .attr("dy", ".15em")
+         .attr("transform", "rotate(-45)");
+
+      // Add title and explanation
+      svg.append("text")
+         .attr("x", 400)
+         .attr("y", 25)
+         .attr("text-anchor", "middle")
+         .attr("font-size", "20px")
+         .text("Engine Cylinders and Average MPG for each Car Make");
+
+        svg.append("text")
+         .attr("x", 400)
+         .attr("y", 600)
+         .attr("text-anchor", "middle")
+	 .attr("font-size", "20px")
+         .text("Each bar shows the availability of various fuel types one car make provides.");
+
+        svg.append("text")
+         .attr("x", 400)
+         .attr("y", 650)
+         .attr("text-anchor", "middle")
+	 .attr("font-size", "20px")
+         .text("Customers can choose their preferred car type from the make with the most categories.");
+    }
+
+	// Button event listeners to switch between scenes
+      document.getElementById("scene1Btn").addEventListener("click", function() {
+        d3.select("#visualization-container").html(""); // Clear previous scene
+        renderScene1(); // Render Scene 1
+      });
+
+      document.getElementById("scene2Btn").addEventListener("click", function() {
+        d3.select("#visualization-container").html(""); // Clear previous scene
+        renderScene2(); // Render Scene 2
+      });
+
+      document.getElementById("scene3Btn").addEventListener("click", function() {
+        d3.select("#visualization-container").html(""); // Clear previous scene
+        renderScene3(); // Render Scene 3
+      });
+	renderScene1();
+
+    });
+  </script>
 
 </body>
 </html>
-
